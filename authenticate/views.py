@@ -1,26 +1,35 @@
 from django.contrib.auth import authenticate
 
 from django.conf import settings
-from django.contrib.auth.models import User
 
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.views import APIView
 
 from .serializer.register import UserSerializer
 from .serializer.login_serializer import LoginSerializer
+from django.contrib.auth import get_user_model
 
 
-class RegisterView(GenericAPIView):
+class RegisterView(APIView):
     serializer_class = UserSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        data = request.data
+        serializer = self.serializer_class(data=data)
 
         if serializer.is_valid():
-            serializer.save()
+            first_name = data.get('first_name', '')
+            last_name = data.get('last_name', '')
+            email = data.get('email', '')
+            password = data.get('password', '')
+
+            user = get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, password=password)
+            user.set_password(password)
+            user.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -31,13 +40,13 @@ class LoginView(GenericAPIView):
 
     def post(self, request):
         data = request.data
-        username = data.get('username', '')
+        email = data.get('email', '')
         password = data.get('password', '')
 
-        if not username:
-            return Response({"error":"username is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not email or not password:
+            return Response({"error":"both email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
 
         if not user:
             return Response({"error":"invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)

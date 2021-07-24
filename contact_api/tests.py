@@ -1,3 +1,6 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class TestCi(TestCase):
+    def test_sum(self):
+        self.assertEqual((2 + 3), 5)

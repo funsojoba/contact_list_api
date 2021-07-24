@@ -1,7 +1,9 @@
+import uuid
 from django.db import models
 
 
 class ContactModel(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
     email = models.EmailField(max_length=250, null=True, blank=True)
