@@ -1,10 +1,10 @@
-import jwt
+from django.contrib.auth import authenticate
 
-from django.contrib import auth
 from django.conf import settings
 from django.contrib.auth.models import User
 
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.exceptions import AuthenticationFailed
@@ -34,24 +34,18 @@ class LoginView(GenericAPIView):
         username = data.get('username', '')
         password = data.get('password', '')
 
-        user = User.objects.get(username=username)
-        
+        if not username:
+            return Response({"error":"username is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = authenticate(username=username, password=password)
+
         if not user:
-            raise AuthenticationFailed("User does not exist")
+            return Response({"error":"invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        serializer = self.serializer_class(user)
 
+        token, _ = Token.objects.get_or_create(user=user)
         
-        user_password = user.check_password(password)
-        if not user_password:
-            raise AuthenticationFailed("incorrect password")
+        data = {"message": "success", "token":token.key}
 
-        auth_token = jwt.encode(
-            {"username": user.username}, settings.JWT_SECRET_KEY)
-        
-        data = {"user": self.serializer_class.data, "token":auth_token}
-            # serializer = UserSerializer(user)
-
-            # data = {
-            #     'user':serializer.data,
-            #     'token': auth_token
-            # }
         return Response(data, status=status.HTTP_200_OK)
