@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'authenticate',
+    'contact_api',
     
     'django.contrib.admin',
     'django.contrib.auth',
