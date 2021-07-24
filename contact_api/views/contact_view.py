@@ -45,11 +45,11 @@ class Contact(APIView):
             image_url += "https://res.cloudinary.com/ddl2pf4qh/image/upload/v1623512852/24-248253_user-profile-default-image-png-clipart-png-download_qwj0qi.png"
 
         contact = ContactModel.objects.create(
-            first_name=first_name, last_name=last_name, email=email, 
+            first_name=first_name, last_name=last_name, email=email, facebook=facebook,
             phone=phone, twitter=twitter, instagram=instagram, linkedin=linkedin, state=state, avatar=image_url)
         contact.save()
 
         serializer_dict = dict(serializer.data)
         serializer_dict['avatar'] = image_url
-        
+
         return Response(serializer_dict, status=status.HTTP_201_CREATED)
