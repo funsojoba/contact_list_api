@@ -1,9 +1,11 @@
 import uuid
 from django.db import models
+from authenticate.models import User
 
 
 class ContactModel(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
     email = models.EmailField(max_length=250, null=True, blank=True)

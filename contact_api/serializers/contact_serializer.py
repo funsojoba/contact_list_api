@@ -6,4 +6,4 @@ class ContactSerializer(serializers.ModelSerializer):
     avatar = serializers.FileField()
     class Meta:
         model = ContactModel
-        fields = ['first_name', 'last_name', 'email', 'phone', 'twitter', 'facebook', 'instagram', 'linkedin', 'state','avatar']
+        fields = ['owner', 'first_name', 'last_name', 'email', 'phone', 'twitter', 'facebook', 'instagram', 'linkedin', 'state','avatar']
