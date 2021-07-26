@@ -14,6 +14,7 @@ import os
 import cloudinary
 from decouple import config
 from pathlib import Path
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,11 +30,11 @@ SECRET_KEY = 'django-insecure-s#m$ik0-e^uw&^(1%ybgs&ll8v+afz%8ut$6=_9kc^!5=wi)$m
 
 JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 
-
+WHITENOISE_AUTOREFRESH=True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'authenticate.User'
 
@@ -50,9 +51,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'rest_framework.authtoken',
-    'cloudinary'
+    'cloudinary',
+    'drf_yasg'
 ]
 
 REST_FRAMEWORK = {
@@ -61,6 +64,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -159,3 +163,5 @@ EMAIL_USE_TLS = True
 EMAIL_PORT=587
 EMAIL_HOST_USER=config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+django_heroku.settings(locals())
