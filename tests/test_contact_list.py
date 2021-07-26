@@ -2,10 +2,11 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
-from rest_framework.test import APIClient
+
+from rest_framework.test import APIClient, APITestCase
 
 
-class TestContactList(TestCase):
+class TestContactList(APITestCase):
     clientt = APIClient()
     url = reverse('contacts')
 
@@ -18,8 +19,9 @@ class TestContactList(TestCase):
         last_name='testing'
         email='test@test.com'
         password='some_test_password'
-        get_user_model().create(first_name=first_name, last_name=last_name, email=email, password=password)
+        get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, password=password)
         
         user = get_user_model().objects.get(email=email)
         self.client.force_authenticate(user=user)
-        
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 200)
