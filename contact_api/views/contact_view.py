@@ -36,7 +36,6 @@ class Contact(APIView):
             valid_extension = ['jpg', 'gif', 'png',
                                'jpeg', 'svg', 'JPG', 'JPEG']
             avatar_url = serializer.data['avatar']
-            print(serializer.data)
             if avatar_url.name.split('.')[-1] not in valid_extension:
                 return Response({"error": "invalid file format"}, status=status.HTTP_400_BAD_REQUEST)
 
