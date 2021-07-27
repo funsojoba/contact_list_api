@@ -34,7 +34,7 @@ WHITENOISE_AUTOREFRESH=True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'https://mycontact-list-api.herokuapp.com/', '.herokuapp.com/']
 
 AUTH_USER_MODEL = 'authenticate.User'
 
