@@ -49,6 +49,9 @@ class SendMail(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.data['sender'] = sender
 
+        if not query.email:
+            return Response({"message":"failure", "error":"user email does not exist"})
+
         try:
             send_mail(name=reciever_name, subject=subject, message=message,
                   to=reciever_email, from_email=config('EMAIL_HOST_USER'))
