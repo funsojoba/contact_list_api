@@ -10,7 +10,6 @@ from contact_api.models.contact import ContactModel
 class ContactDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
     serialializer_class = ContactListSerializer
-    
 
     def get(self, request, pk):
         queryset = ContactModel.objects.get(id=pk)

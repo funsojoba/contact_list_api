@@ -10,9 +10,9 @@ from .views.contact_detail import ContactDetail
 urlpatterns = [
     path('', ListContact.as_view(), name="contacts"),
     path('contact/<str:pk>', ContactDetail.as_view(), name="contact-detail"),
-    path('contact/create', Contact.as_view(), name="create-contact"),
-    path('contact/update/<str:pk>',
+    path('create-contact', Contact.as_view(), name="create-contact"),
+    path('update-contact/<str:pk>',
          UpdateContactView.as_view(), name="update-contact"),
     path('send-mail/<str:pk>', SendMail.as_view(), name='send-mail'),
-    path('user/', UserProfile.as_view(), name='user')
+    path('user/', UserProfile.as_view(), name='user'),
 ]
