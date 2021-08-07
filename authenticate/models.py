@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    AVATAR_URL = 'https://res.cloudinary.com/ddl2pf4qh/image/upload/v1627397427/contact_api/user_uaonlt.png'
+    AVATAR_URL = 'https://res.cloudinary.com/ddl2pf4qh/image/upload/v1627605865/contact_api/avatar3_chs26r.png'
     
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)

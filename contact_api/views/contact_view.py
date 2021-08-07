@@ -36,7 +36,7 @@ class Contact(APIView):
             valid_extension = ['jpg', 'gif', 'png',
                                'jpeg', 'svg', 'JPG', 'JPEG']
             avatar_url = serializer.data['avatar']
-            if avatar_url.name.split('.')[-1] not in valid_extension:
+            if avatar_url.name.split('.')[-1] not in valid_extension:   
                 return Response({"error": "invalid file format"}, status=status.HTTP_400_BAD_REQUEST)
 
             upload_image = cloudinary.uploader.upload(avatar_url, folder=config(
@@ -44,7 +44,6 @@ class Contact(APIView):
             image_url += upload_image.get('url')
         else:
             image_url += "https://res.cloudinary.com/ddl2pf4qh/image/upload/v1623512852/24-248253_user-profile-default-image-png-clipart-png-download_qwj0qi.png"
-
         contact = ContactModel.objects.create(
             owner=user,
             first_name=first_name, last_name=last_name, email=email, facebook=facebook,
