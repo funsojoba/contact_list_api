@@ -56,7 +56,6 @@ class UpdateContactView(APIView):
         if not state:
             state = db_data.state
 
-
         db_data.first_name = first_name
         db_data.last_name = last_name
         db_data.email = email
@@ -69,3 +68,8 @@ class UpdateContactView(APIView):
         db_data.save()
 
         return Response({"message": "success"}, status=status.HTTP_200_OK)
+    
+    def delete(self, request, pk):
+        db_data = ContactModel.objects.get(id=pk)
+        db_data.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
