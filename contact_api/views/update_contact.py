@@ -2,8 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 from contact_api.models.contact import ContactModel
-from contact_api.serializers.contact_list_serializer import ContactListSerializer
-
+from contact_api.serializers.update_contact_serializer import UpdateContactSerailzer
 from decouple import config
 import cloudinary.uploader
 
@@ -11,7 +10,7 @@ import cloudinary.uploader
 class UpdateContactView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = ContactModel.objects.all()
-    serializer_class = ContactListSerializer
+    serializer_class = UpdateContactSerailzer
 
     def put(self, request, pk):
         data = request.data
@@ -25,10 +24,9 @@ class UpdateContactView(APIView):
         twitter = data.get('twitter', '')
         linkedin = data.get('linkedin', '')
         state = data.get('state', '')
-        avatar = data.get('avatar', '')
 
         db_data = ContactModel.objects.get(id=pk)
-        serializer = ContactListSerializer(data=data)
+        serializer = UpdateContactSerailzer(data=data)
         serializer.is_valid()
 
         if not first_name:
@@ -58,19 +56,6 @@ class UpdateContactView(APIView):
         if not state:
             state = db_data.state
 
-        if avatar:
-            valid_extension = ['jpg', 'gif', 'png',
-                               'jpeg', 'svg', 'JPG', 'JPEG']
-            avatar_url = serializer.data['avatar']
-            # print("avatar", avatar, "url seriaili", avatar_url.name.split('.')[-1])
-            if avatar_url.name.split('.')[-1] not in valid_extension:
-                return Response({"error": "invalid file format"}, status=status.HTTP_400_BAD_REQUEST)
-
-            upload_image = cloudinary.uploader.upload(avatar_url, folder=config(
-                'FOLDER_NAME'), user_filename=True, overwrite=True)
-            avatar = upload_image.get('url')
-        else:
-            avatar = db_data.avatar
 
         db_data.first_name = first_name
         db_data.last_name = last_name
@@ -81,7 +66,6 @@ class UpdateContactView(APIView):
         db_data.instagram = instagram
         db_data.linkedin = linkedin
         db_data.state = state
-        db_data.avatar = avatar
         db_data.save()
 
         return Response({"message": "success"}, status=status.HTTP_200_OK)
