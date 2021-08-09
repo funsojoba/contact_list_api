@@ -28,10 +28,13 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    AVATAR_URL = 'https://res.cloudinary.com/ddl2pf4qh/image/upload/v1627605865/contact_api/avatar3_chs26r.png'
+    
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
+    avatar = models.URLField(default=AVATAR_URL)
 
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)

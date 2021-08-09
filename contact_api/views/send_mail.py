@@ -13,9 +13,9 @@ from contact_api.serializers.send_mail_serializer import SendMailSerializer
 from contact_api.models.email import EmailModel
 
 
-def send_mail(name, subject, message, to, from_email):
+def send_mail(name, subject, message, to, from_email, sender):
     html_path = 'email_template/welcome.html'
-    context_data = {'name': name, 'subject': subject, 'message': message}
+    context_data = {'name': name, 'subject': subject, 'message': message, 'sender':sender}
     email_template = get_template(html_path).render(context_data)
     email_message = EmailMessage(
         subject=subject,
@@ -49,9 +49,12 @@ class SendMail(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.data['sender'] = sender
 
+        if not query.email:
+            return Response({"message":"failure", "error":"user email does not exist"})
+
         try:
             send_mail(name=reciever_name, subject=subject, message=message,
-                  to=reciever_email, from_email=config('EMAIL_HOST_USER'))
+                  to=reciever_email, from_email=config('EMAIL_HOST_USER'), sender=sender.email)
         except Exception as err:
             # return Response({"error":err, "message":"failure"}, status=status.HTTP_400_BAD_REQUEST)
             print(err)

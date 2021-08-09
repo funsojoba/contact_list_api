@@ -30,9 +30,9 @@ class RegisterView(APIView):
             user.set_password(password)
             user.save()
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"data":serializer.data, "message":"success"}, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":serializer.errors, "message":"failure"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(GenericAPIView):
@@ -44,12 +44,12 @@ class LoginView(GenericAPIView):
         password = data.get('password', '')
 
         if not email or not password:
-            return Response({"error":"both email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":"both email and password are required", "message":"failure"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(email=email, password=password)
 
         if not user:
-            return Response({"error":"invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":"invalid credentials", "message":"failure"}, status=status.HTTP_400_BAD_REQUEST)
             
         serializer = self.serializer_class(user)
 

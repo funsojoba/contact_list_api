@@ -16,7 +16,7 @@ class ContactModel(models.Model):
     linkedin = models.URLField(null=True, blank=True)
     state = models.CharField(max_length=150, null=True, blank=True)
     avatar = models.URLField(
-        default="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1623512852/24-248253_user-profile-default-image-png-clipart-png-download_qwj0qi.png")
+        default="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1627605865/contact_api/avatar3_chs26r.png")
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
