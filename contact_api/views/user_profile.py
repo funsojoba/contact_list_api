@@ -37,7 +37,7 @@ class UserProfile(APIView):
 
         image_url = ''
         if avatar:
-            valid_extension = ['jpg', 'png', 'jpeg', 'svg', 'JPG', 'JPEG', 'svg']
+            valid_extension = ['jpg', 'png', 'jpeg', 'JPG', 'JPEG', 'svg']
             avatar_url = serializer.data['avatar']
 
             if avatar_url.name.split('.')[-1] not in valid_extension:
