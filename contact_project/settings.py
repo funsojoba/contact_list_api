@@ -155,14 +155,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 cloudinary.config(
     cloud_name=config('CLOUD_NAME'),
-    api_key=config('API_KEY'),
-    api_secret=config('API_SECRET'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
     secure=True
 )
 
 #EMAIL SETTINGS
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_HOST = 'smtp.ethereal.email'
 EMAIL_USE_TLS = True
 EMAIL_PORT=587
 EMAIL_HOST_USER=config('EMAIL_HOST_USER')

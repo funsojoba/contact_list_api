@@ -11,19 +11,24 @@ from rest_framework import permissions, status
 
 from contact_api.serializers.send_mail_serializer import SendMailSerializer
 from contact_api.models.email import EmailModel
+from contact_api.task import send_mail, send_mail_async
 
 
-def send_mail(name, subject, message, to, from_email, sender):
+def send_email(name, subject, message, to, from_email, sender):
     html_path = 'email_template/welcome.html'
-    context_data = {'name': name, 'subject': subject, 'message': message, 'sender':sender}
+    context_data = {'name': name, 
+                    'subject': subject, 
+                    'message': message, 
+                    'sender':sender}
     email_template = get_template(html_path).render(context_data)
-    email_message = EmailMessage(
-        subject=subject,
-        body=email_template,
-        from_email=from_email,
-        to=[to])
-    email_message.content_subtype = 'html'
-    email_message.send(fail_silently=False)
+    send_mail_async.delay(template=html_path, subject=subject, recipients=to, context=context_data)
+    # email_message = EmailMessage(
+    #     subject=subject,
+    #     body=email_template,
+    #     from_email=from_email,
+    #     to=[to])
+    # email_message.content_subtype = 'html'
+    # email_message.send(fail_silently=False)
 
 
 class SendMail(APIView):
@@ -53,7 +58,7 @@ class SendMail(APIView):
             return Response({"message":"failure", "error":"user email does not exist"})
 
         try:
-            send_mail(name=reciever_name, subject=subject, message=message,
+            send_email(name=reciever_name, subject=subject, message=message,
                   to=reciever_email, from_email=config('EMAIL_HOST_USER'), sender=sender.email)
         except Exception as err:
             # return Response({"error":err, "message":"failure"}, status=status.HTTP_400_BAD_REQUEST)
