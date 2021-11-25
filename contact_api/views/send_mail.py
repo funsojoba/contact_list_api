@@ -1,4 +1,5 @@
 from decouple import config
+from typing import List, Dict
 
 from django.shortcuts import render
 from django.core.mail import EmailMessage
@@ -14,21 +15,28 @@ from contact_api.models.email import EmailModel
 from contact_api.task import send_mail, send_mail_async
 
 
-def send_email(name, subject, message, to, from_email, sender):
-    html_path = 'email_template/welcome.html'
-    context_data = {'name': name, 
-                    'subject': subject, 
-                    'message': message, 
-                    'sender':sender}
-    email_template = get_template(html_path).render(context_data)
-    send_mail_async.delay(template=html_path, subject=subject, recipients=to, context=context_data)
-    # email_message = EmailMessage(
-    #     subject=subject,
-    #     body=email_template,
-    #     from_email=from_email,
-    #     to=[to])
-    # email_message.content_subtype = 'html'
-    # email_message.send(fail_silently=False)
+def send_async(
+         template: str, subject: str, recipients: List[str], context: Dict
+    ):
+        send_mail_async.delay(
+            template=template, subject=subject, recipients=recipients, context=context
+        )
+        
+# def send_email(name, subject, message, to, from_email, sender):
+#     html_path = 'email_template/welcome.html'
+#     context_data = {'name': name, 
+#                     'subject': subject, 
+#                     'message': message, 
+#                     'sender':sender}
+#     email_template = get_template(html_path).render(context_data)
+#     # send_mail_async.delay(template=html_path, subject=subject, recipients=[to], context=context_data)
+#     email_message = EmailMessage(
+#         subject=subject,
+#         body=email_template,
+#         from_email=from_email,
+#         to=[to])
+#     email_message.content_subtype = 'html'
+#     email_message.send(fail_silently=False)
 
 
 class SendMail(APIView):
