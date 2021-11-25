@@ -1,3 +1,4 @@
+from re import template
 from decouple import config
 from typing import List, Dict
 
@@ -14,29 +15,7 @@ from contact_api.serializers.send_mail_serializer import SendMailSerializer
 from contact_api.models.email import EmailModel
 from contact_api.task import send_mail, send_mail_async
 
-
-def send_async(
-         template: str, subject: str, recipients: List[str], context: Dict
-    ):
-        send_mail_async.delay(
-            template=template, subject=subject, recipients=recipients, context=context
-        )
-        
-# def send_email(name, subject, message, to, from_email, sender):
-#     html_path = 'email_template/welcome.html'
-#     context_data = {'name': name, 
-#                     'subject': subject, 
-#                     'message': message, 
-#                     'sender':sender}
-#     email_template = get_template(html_path).render(context_data)
-#     # send_mail_async.delay(template=html_path, subject=subject, recipients=[to], context=context_data)
-#     email_message = EmailMessage(
-#         subject=subject,
-#         body=email_template,
-#         from_email=from_email,
-#         to=[to])
-#     email_message.content_subtype = 'html'
-#     email_message.send(fail_silently=False)
+from notifications.services import send_email
 
 
 class SendMail(APIView):
@@ -65,14 +44,16 @@ class SendMail(APIView):
         if not query.email:
             return Response({"message":"failure", "error":"user email does not exist"})
 
-        try:
-            send_email(name=reciever_name, subject=subject, message=message,
-                  to=reciever_email, from_email=config('EMAIL_HOST_USER'), sender=sender.email)
-        except Exception as err:
-            # return Response({"error":err, "message":"failure"}, status=status.HTTP_400_BAD_REQUEST)
-            print(err)
-        
-        create_db_email = EmailModel.objects.create(sender=sender, subject=subject, message=message, reciever=reciever_email)
-        create_db_email.save()
+        context = {
+            "message":message,
+            "receiver":reciever_name
+        }
+        send_email(
+            template="email_template.html",
+            subject=subject,
+            recipients=[reciever_email],
+            sender=sender,
+            context=context
+        )
 
         return Response({"message":"success", "data":serializer.data, "info":f'Message sent to {reciever_email}'})
