@@ -1,19 +1,9 @@
-from re import template
-from decouple import config
-from typing import List, Dict
-
-from django.shortcuts import render
-from django.core.mail import EmailMessage
-from django.template.loader import get_template
-from contact_api.models.contact import ContactModel
-
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import permissions, status
 
+from contact_api.models.contact import ContactModel
 from contact_api.serializers.send_mail_serializer import SendMailSerializer
-from contact_api.models.email import EmailModel
-from contact_api.task import send_mail, send_mail_async
 
 from notifications.services import send_email
 
@@ -26,34 +16,39 @@ class SendMail(APIView):
         data = request.data
         query = ContactModel.objects.get(id=pk)
 
-        data['sender'] = request.user.id
+        data["sender"] = request.user.id
 
         sender = request.user
-        message = data.get('message', '')
-        subject = data.get('subject', '')
+        message = data.get("message", "")
+        subject = data.get("subject", "")
 
         reciever_email = query.email
         reciever_name = query.first_name
 
-        data['reciever'] = reciever_email
+        data["reciever"] = reciever_email
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.data['sender'] = sender
+        serializer.data["sender"] = sender
 
         if not query.email:
-            return Response({"message":"failure", "error":"user email does not exist"})
+            return Response(
+                {"message": "failure", "error": "user email does not exist"}
+            )
 
-        context = {
-            "message":message,
-            "receiver":reciever_name
-        }
+        context = {"message": message, "receiver": reciever_name}
         send_email(
             template="email_template.html",
             subject=subject,
             recipients=[reciever_email],
             sender=sender,
-            context=context
+            context=context,
         )
 
-        return Response({"message":"success", "data":serializer.data, "info":f'Message sent to {reciever_email}'})
+        return Response(
+            {
+                "message": "success",
+                "data": serializer.data,
+                "info": f"Message sent to {reciever_email}",
+            }
+        )
