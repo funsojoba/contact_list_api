@@ -18,11 +18,11 @@ services:
     container_name: kontat
     command: >
       sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:18000"
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
-      - 18000:8000
+      - 8000:8000
     environment:
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
