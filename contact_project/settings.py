@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config(
     "SECRET_KEY",
-    default='"django-insecure-s#m$ik0-e^uw&^(1%ybgs&ll8v+afz%8ut$6=_9kc^!5=wi)$m"',
+    default="django-insecure-s#m$ik0-e^uw&^(1%ybgs&ll8v+afz%8ut$6=_9kc^!5=wi)$m",
 )
 
 # JWT
@@ -103,7 +103,14 @@ WSGI_APPLICATION = "contact_project.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default='postgres'),
+        'USER': config('DB_USER', default='postgres'),
+        'PASSWORD': config('DB_PASSWORD', default='postgtres'),
+        'HOST': config('DB_HOST', default='db'),
+        'PORT': config('DB_PORT', default='5432')
+    }
 }
 
 

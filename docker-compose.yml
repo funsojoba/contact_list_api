@@ -1,9 +1,24 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:10-alpine
+    volumes:
+      - ./data/db:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432
+    
+
   django:
     build: .
     container_name: kontat
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:18000"
     volumes:
       - .:/app
     ports:
@@ -12,9 +27,15 @@ services:
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
       - DEBUG=1
-      - ALLOWED_HOST= 127.0.0.1 localhost
+      - ALLOWED_HOST=127.0.0.1 localhost
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
 
   celery:
+    restart: always
     build: .
     container_name: celery
     command: celery -A contact_project worker -l info
@@ -22,6 +43,8 @@ services:
       - .:/app
     depends_on:
       - redis
+      - db
+      - django
 
   redis:
     image: redis:alpine
