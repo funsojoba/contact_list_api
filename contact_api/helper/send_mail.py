@@ -1,7 +1,9 @@
+from typing import List
 from decouple import config
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
+
 
 
 class EmailManager:
@@ -25,3 +27,7 @@ class EmailManager:
         mail = self._compose_mail()
         result = mail.send(fail_silently=False)
         return result
+
+class SendEmail:
+    def __init__(self, subject: str, body: str, email_from: str, email_to: List):
+        pass

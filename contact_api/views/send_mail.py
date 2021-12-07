@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from contact_api.models.contact import ContactModel
 from contact_api.serializers.send_mail_serializer import SendMailSerializer
 
-from notifications.services import send_email
+from notifications.services import EmailService
 
 
 class SendMail(APIView):
@@ -37,8 +37,8 @@ class SendMail(APIView):
             )
 
         context = {"message": message, "receiver": reciever_name}
-        send_email(
-            template="email_template.html",
+        EmailService.send_email(
+            template='email_template.html',
             subject=subject,
             recipients=[reciever_email],
             sender=sender,
