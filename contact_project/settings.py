@@ -106,10 +106,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME', default='postgres'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='postgtres'),
-        'HOST': config('DB_HOST', default='db'),
-        'PORT': config('DB_PORT', default='5432')
+        'USER': config('USER', default='postgres'),
+        'PASSWORD': config('PASSWORD', default='postgres'),
+        'HOST': config('HOST', default='db'),
+        'PORT': config('PORT', default=5432)
     }
 }
 
@@ -164,9 +164,9 @@ cloudinary.config(
 
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_PORT = config("EMAIL_PORT", default=587)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default='')
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 django_heroku.settings(locals())

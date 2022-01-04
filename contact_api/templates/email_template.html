@@ -16,34 +16,89 @@
         }
         body{
             background: #f6f6f6;
+            padding-top:30px;
         }
         .container{
             background:#fff;
             padding:20px;
-            max-width: 750px;
+            width: 750px;
+            margin:auto;
+            box-shadow: 0 0 43px rgba(0,0,0,.04);
         }
         a{
-            color:#10BDA8;
+            color:#e6ff57;
             text-decoration: none;
             display:inline-block;
         }
         p, h2{
             color: #414141;
         }
+        .container .container-header{
+            background:#DFFFFB;
+            display: flex;
+            justify-content: space-around;
+        }
+        .container .container-header .text{
+            padding:30px;
+        }
+        .container .container-header .image{
+            width:90px;
+            padding:10px;
+        }
+        
+        .container .container-header .image img{
+            width:100%;
+        }
+
+        .container .text{
+            padding:30px;
+        }
+
+        .footer{
+            background:#10BDA8;
+            padding:10px;
+            width: 750px;
+            margin: auto;
+            display:flex;
+        }
+        .footer .text{
+            color:#fff;
+            padding:5px;
+        }
+        .footer .image{
+            width:30px;
+        }
+        .footer .image img{
+            width:100%;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="">
+        <div class="container-header">
+            <div class='text'>
+                <h2>Mail from {{first_name}} {{last_name}}</h2>
+            </div>
+            <div class="image">
+                <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1641167068/contact_api/undraw_mail_sent_re_0ofv_wlgwox.svg" alt="Kontat Mail">
+            </div>
+        </div>
 
+        <div class="text">
+            <p>{{message}}</p>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut in nulla expedita dolor obcaecati error, repudiandae blanditiis libero. Deserunt quibusdam sapiente cum, laborum culpa animi non! Quidem magnam expedita molestiae.
+            </p>
+        </div>
+
+    </div>
+    <div class="footer">
+        <div class="image">
+            <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1628029248/contact_api/authpage/Group_23_lfxeeb.png" />
         </div>
         <div class="text">
-            <h2>Hello {{receiver}}</h2>
-            <p>{{message}}</p>
-        </div>
-
-        <div class="footer">
-            <small>With love <a href="http://">Kontat App</a></small>
+            <small>With love <a href="http://kontat.com">Kontat App</a></small>
         </div>
     </div>
 </body>
